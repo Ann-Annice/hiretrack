@@ -29,13 +29,13 @@ export async function POST(request: Request) {
 
     const candidate = await prisma.candidate.create({
       data: {
-        name: body.name,
-        email: body.email,
-        phone: body.phone,
-        resumeUrl: body.resumeUrl,
-        status: body.status,
-        jobId: body.jobId,
-      },
+  name: body.name,
+  email: body.email,
+  phone: body.phone,
+  about: body.about,
+  status: body.status,
+  jobId: body.jobId,
+},
       include: {
         job: true,
       },

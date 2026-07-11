@@ -1,36 +1,235 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HireTrack – Recruitment Management System
 
-## Getting Started
+## Product Name
 
-First, run the development server:
+**HireTrack – Recruitment Management System**
+
+A full-stack web application for managing the recruitment process, including jobs, candidates, interviews, and user authentication.
+
+---
+
+# Features
+
+### Authentication
+- User Registration
+- Secure Login
+- Logout
+- JWT Authentication
+- Protected Routes
+
+### Dashboard
+- Recruitment Statistics
+- Recent Jobs
+- Recent Candidates
+- Upcoming Interviews
+
+### Job Management
+- Add Job
+- Edit Job
+- Delete Job
+- Search Jobs
+- Filter by Status
+
+### Candidate Management
+- Add Candidate
+- Edit Candidate
+- Delete Candidate
+- Search Candidates
+- Filter by Status
+- Candidate Profile
+
+### Interview Management
+- Schedule Interview
+- Edit Interview
+- Delete Interview
+- Search Interviews
+- Filter by Interview Type
+
+---
+
+# Tech Stack
+
+## Frontend
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+
+## Backend
+- Next.js API Routes
+
+## Database
+- PostgreSQL (Supabase)
+
+## ORM
+- Prisma
+
+## Authentication
+- JWT
+- bcryptjs
+
+---
+
+# Quick Start
+
+## Clone Repository
+
+```bash
+git clone https://github.com/Ann-Annice/hiretrack.git
+```
+
+## Install Dependencies
+
+```bash
+npm install
+```
+
+## Configure Environment Variables
+
+Create a `.env` file:
+
+```env
+DATABASE_URL=your_database_url
+DIRECT_URL=your_direct_database_url
+AUTH_SECRET=your_secret_key
+```
+
+## Generate Prisma Client
+
+```bash
+npx prisma generate
+```
+
+## Run Migrations
+
+```bash
+npx prisma migrate dev
+```
+
+## Start Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+# Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Description |
+|----------|-------------|
+| DATABASE_URL | PostgreSQL database connection |
+| DIRECT_URL | Prisma direct connection |
+| AUTH_SECRET | JWT secret key |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Architecture
 
-## Deploy on Vercel
+```
+Authentication
+        │
+        ▼
+ Dashboard
+ ├── Jobs
+ ├── Candidates
+ └── Interviews
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Testing
+
+The following features were tested successfully:
+
+- User Registration
+- User Login
+- Logout
+- Dashboard
+- Job CRUD
+- Candidate CRUD
+- Interview CRUD
+- Search
+- Filters
+- Protected Routes
+
+---
+
+# Roadmap
+
+## Completed
+
+- Authentication
+- Dashboard
+- Job Management
+- Candidate Management
+- Interview Management
+- Search and Filters
+
+## Future Improvements
+
+- Resume Upload
+- Email Notifications
+- Calendar View
+- Reports
+- Analytics Dashboard
+
+---
+
+# Screenshots
+
+Add screenshots here after uploading them to GitHub.
+
+Example:
+
+```markdown
+## Login
+
+![Login](screenshots/login.png)
+
+## Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+## Jobs
+
+![Jobs](screenshots/jobs.png)
+
+## Candidates
+
+![Candidates](screenshots/candidates.png)
+
+## Interviews
+
+![Interviews](screenshots/interviews.png)
+```
+
+---
+
+# Demo Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| Administrator | admin@example.com | admin123 |
+
+Replace these with your own demo credentials before submitting.
+
+---
+
+# License
+
+This project was developed for academic purposes.
+
+---
+
+# Author
+
+**Ann Annice**
+
+GitHub: https://github.com/Ann-Annice

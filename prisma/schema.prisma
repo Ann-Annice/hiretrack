@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id       String @id @default(cuid())
+  name     String
+  email    String @unique
+  password String
+  role     Role   @default(RECRUITER)
+
+  jobs Job[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Job {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  status      JobStatus @default(OPEN)
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+
+  candidates Candidate[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Candidate {
+  id        String          @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  about     String?
+  status    CandidateStatus @default(APPLIED)
+
+  jobId String
+  job   Job @relation(fields: [jobId], references: [id])
+
+  interviews Interview[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Interview {
+  id String @id @default(cuid())
+
+  scheduledAt DateTime
+  type        InterviewType
+  feedback    String?
+
+  candidateId String
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  RECRUITER
+  VIEWER
+}
+
+enum JobStatus {
+  OPEN
+  CLOSED
+  DRAFT
+}
+
+enum CandidateStatus {
+  APPLIED
+  SCREENING
+  INTERVIEW
+  OFFER
+  REJECTED
+  HIRED
+}
+
+enum InterviewType {
+  PHONE
+  TECHNICAL
+  HR
+  FINAL
+}

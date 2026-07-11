@@ -1,65 +1,285 @@
-import Image from "next/image";
+import Link from "next/link";
+import { prisma } from "@/app/lib/prisma";
 
-export default function Home() {
+export default async function Dashboard() {
+  const totalJobs = await prisma.job.count();
+
+  const openJobs = await prisma.job.count({
+    where: {
+      status: "OPEN",
+    },
+  });
+
+  const totalCandidates = await prisma.candidate.count();
+
+  const hiredCandidates = await prisma.candidate.count({
+    where: {
+      status: "HIRED",
+    },
+  });
+
+  const totalInterviews = await prisma.interview.count();
+
+  const recentJobs = await prisma.job.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 5,
+  });
+
+  const recentCandidates = await prisma.candidate.findMany({
+    include: {
+      job: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 5,
+  });
+
+  const recentInterviews = await prisma.interview.findMany({
+    include: {
+      candidate: {
+        include: {
+          job: true,
+        },
+      },
+    },
+    orderBy: {
+      scheduledAt: "asc",
+    },
+    take: 5,
+  });
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen bg-gray-100 max-w-7xl mx-auto p-10">
+      {/* Dashboard Header */}
+
+<div className="mb-10 bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-700 rounded-3xl p-8 shadow-xl text-white">
+
+  <p className="uppercase tracking-[0.3em] text-sm text-blue-100 font-semibold">
+   Manage.Hire.Grow
+  </p>
+
+  
+</div>
+
+      {/* Statistics Cards */}
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+  <div className="bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-2xl shadow-lg p-6 hover:scale-105 transition duration-300">
+    <p className="text-sm uppercase tracking-wide opacity-90">
+      Total Jobs
+    </p>
+
+    <h2 className="text-4xl font-bold mt-3">
+      {totalJobs}
+    </h2>
+  </div>
+
+  <div className="bg-gradient-to-r from-green-600 to-green-500 text-white rounded-2xl shadow-lg p-6 hover:scale-105 transition duration-300">
+    <p className="text-sm uppercase tracking-wide opacity-90">
+      Open Jobs
+    </p>
+
+    <h2 className="text-4xl font-bold mt-3">
+      {openJobs}
+    </h2>
+  </div>
+
+  <div className="bg-gradient-to-r from-purple-600 to-purple-500 text-white rounded-2xl shadow-lg p-6 hover:scale-105 transition duration-300">
+    <p className="text-sm uppercase tracking-wide opacity-90">
+      Candidates
+    </p>
+
+    <h2 className="text-4xl font-bold mt-3">
+      {totalCandidates}
+    </h2>
+  </div>
+
+  <div className="bg-gradient-to-r from-orange-600 to-orange-500 text-white rounded-2xl shadow-lg p-6 hover:scale-105 transition duration-300">
+    <p className="text-sm uppercase tracking-wide opacity-90">
+      Hired
+    </p>
+
+    <h2 className="text-4xl font-bold mt-3">
+      {hiredCandidates}
+    </h2>
+  </div>
+
+</div>
+
+      <div className="mt-10 flex flex-wrap gap-4">
+
+  <Link
+    href="/jobs"
+    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl shadow transition"
+  >
+    📂 View Jobs
+  </Link>
+
+  <Link
+    href="/candidates"
+    className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl shadow transition"
+  >
+    👥 View Candidates
+  </Link>
+
+  <Link
+    href="/interviews"
+    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl shadow transition"
+  >
+    📅 View Interviews
+  </Link>
+
+  <Link
+    href="/jobs/new"
+    className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl shadow transition"
+  >
+    ➕ Add Job
+  </Link>
+
+</div>
+
+      {/* Recent Jobs */}
+      <section className="mt-12">
+        <h2 className="text-2xl font-bold mb-4">
+          Recent Jobs
+        </h2>
+
+        <div className="border rounded-lg overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="text-left p-4">Title</th>
+                <th className="text-left p-4">Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {recentJobs.map((job) => (
+                <tr key={job.id} className="border-t">
+                  <td className="p-4">
+                    <Link
+                      href={`/jobs/${job.id}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      {job.title}
+                    </Link>
+                  </td>
+
+                  <td className="p-4">
+                    {job.status}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Recent Candidates */}
+      <section className="mt-12">
+        <h2 className="text-2xl font-bold mb-4">
+          Recent Candidates
+        </h2>
+
+        <div className="border rounded-lg overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="text-left p-4">Name</th>
+                <th className="text-left p-4">Job</th>
+                <th className="text-left p-4">Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {recentCandidates.map((candidate) => (
+                <tr key={candidate.id} className="border-t">
+                  <td className="p-4">
+                    <Link
+                      href={`/candidates/${candidate.id}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      {candidate.name}
+                    </Link>
+                  </td>
+
+                  <td className="p-4">
+                    {candidate.job.title}
+                  </td>
+
+                  <td className="p-4">
+                    {candidate.status}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* Upcoming Interviews */}
+      <section className="mt-12">
+        <h2 className="text-2xl font-bold mb-4">
+          Upcoming Interviews
+        </h2>
+
+        <div className="bg-white rounded-xl shadow border overflow-hidden">
+          <table className="min-w-full border-collapse">
+            <thead className="bg-gray-50 text-gray-700 uppercase text-sm">
+              <tr className="border-t hover:bg-gray-50 transition-colors">
+                <th className="text-left p-4">Candidate</th>
+                <th className="text-left p-4">Job</th>
+                <th className="text-left p-4">Type</th>
+                <th className="text-left p-4">Scheduled At</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {recentInterviews.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="text-center p-6 text-gray-500"
+                  >
+                    No interviews scheduled.
+                  </td>
+                </tr>
+              ) : (
+                recentInterviews.map((interview) => (
+                  <tr key={interview.id} className="border-t">
+                    <td className="p-4">
+                      <Link
+                        href={`/interviews/${interview.id}`}
+                        className="text-blue-600 hover:underline"
+                      >
+                        {interview.candidate.name}
+                      </Link>
+                    </td>
+
+                    <td className="p-4">
+                      {interview.candidate.job.title}
+                    </td>
+
+                    <td className="p-4">
+                      {interview.type}
+                    </td>
+
+                    <td className="p-4">
+                      {new Date(
+                        interview.scheduledAt
+                      ).toLocaleString()}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
   );
 }

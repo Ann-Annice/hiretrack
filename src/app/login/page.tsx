@@ -28,9 +28,7 @@ export default function LoginPage() {
 
     if (response.ok) {
       alert("Login Successful!");
-
-      router.push("/");
-      router.refresh();
+window.location.href = "/";
     } else {
       alert(data.message);
     }

@@ -4,26 +4,31 @@ import jwt from "jsonwebtoken";
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
 
-  console.log("Token exists:", !!token);
+  console.log("TOKEN:", token);
 
-  const publicRoutes = ["/login", "/register"];
-
-  if (publicRoutes.includes(request.nextUrl.pathname)) {
+  if (
+    request.nextUrl.pathname === "/login" ||
+    request.nextUrl.pathname === "/register"
+  ) {
     return NextResponse.next();
   }
 
   if (!token) {
-    console.log("No token found");
+    console.log("NO TOKEN");
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.AUTH_SECRET!);
-    console.log("JWT verified:", decoded);
+    const decoded = jwt.verify(
+      token,
+      process.env.AUTH_SECRET!
+    );
+
+    console.log(decoded);
 
     return NextResponse.next();
-  } catch (error) {
-    console.error("JWT verify failed:", error);
+  } catch (err) {
+    console.log("JWT ERROR:", err);
 
     return NextResponse.redirect(new URL("/login", request.url));
   }

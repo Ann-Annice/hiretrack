@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
 
+  console.log("Token exists:", !!token);
+
   const publicRoutes = ["/login", "/register"];
 
   if (publicRoutes.includes(request.nextUrl.pathname)) {
@@ -11,13 +13,18 @@ export function middleware(request: NextRequest) {
   }
 
   if (!token) {
+    console.log("No token found");
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   try {
-    jwt.verify(token, process.env.AUTH_SECRET!);
+    const decoded = jwt.verify(token, process.env.AUTH_SECRET!);
+    console.log("JWT verified:", decoded);
+
     return NextResponse.next();
-  } catch {
+  } catch (error) {
+    console.error("JWT verify failed:", error);
+
     return NextResponse.redirect(new URL("/login", request.url));
   }
 }
